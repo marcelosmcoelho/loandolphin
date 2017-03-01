@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Conversor</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body>
+<div ng-app="myApp" ng-controller="myCtrl">
+ 
+  <table width="346" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td width="92" height="39">
+<div align="left">Converter de</div></td>
+      <td width="66"> <div align="left"> 
+          <select name="select" id="sel1" ng-model="selectedName" ng-options="x for x in names">
+          </select>
+        </div></td>
+      <td width="53"><div align="left">para</div></td>
+      <td width="135"> <div align="left"> 
+          <select name="select" id="sel2" ng-model="selectedName2" ng-options="x for x in names2">
+          </select>
+        </div></td>
+    </tr>
+  </table>
+  <table width="346" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td width="87" height="39"> <div align="left">Valor:</div></td>
+      <td width="160"> <div align="left"> 
+          <input name="text" type="text"  id="dig" ng-model="vl">
+        </div></td>
+      <td width="99"><img src="play.gif" width="18" height="18" onClick="testar()" style="cursor:pointer"></td>
+    </tr>
+  </table>
+  <table width="346" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td width="93" height="32">
+<div align="left">Resultado:</div></td>
+      <td width="253"><div id="result" align="left"></div></td>
+    </tr>
+  </table>
+</div>
+  
+</body>
+</html>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    $scope.names = ["AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HRK","HUF","IDR","ILS","INR","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","RUB","SEK","SGD","THB","TRY","USD","ZAR"];
+    $scope.names2 = ["AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HRK","HUF","IDR","ILS","INR","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","RUB","SEK","SGD","THB","TRY","USD","ZAR"];
+});
+
+
+var xmlHttp;
+var retornohtml0;
+
+function testar()
+{ 
+
+    xmlHttp=GetXmlHttpObject();
+    if (xmlHttp==null)
+    {
+    alert ("Your browser does not support AJAX!");
+    return;
+    } 
+	
+	moeda1=document.getElementById("sel1").value
+	moeda1=moeda1.substring(7)
+
+	moeda2=document.getElementById("sel2").value
+	moeda2=moeda2.substring(7)
+
+    var url="http://api.fixer.io/latest?symbols=" + moeda2 + "&base=" + moeda1;
+	
+	xmlHttp.onreadystatechange = function() {
+		if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+			var myObj = JSON.parse(xmlHttp.responseText);
+
+              var aux=xmlHttp.responseText
+              var valor=aux.substring(49)
+              var valor2=aux.substring(49,49+valor.length-2)
+              
+               document.getElementById("result").innerHTML=parseFloat(     parseFloat(document.getElementById("dig").value) * parseFloat(valor2)     ).toFixed(4)    
+		}
+	};
+	
+    xmlHttp.open("GET",url,true);
+    xmlHttp.send();
+}
+
+
+function GetXmlHttpObject()
+{
+var xmlHttp=null;
+try
+  {
+  xmlHttp=new XMLHttpRequest();
+  }
+catch (e)
+  {
+  try
+    {
+    xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+    }
+  catch (e)
+    {
+    xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+  }
+return xmlHttp;
+}
+
+</script>
